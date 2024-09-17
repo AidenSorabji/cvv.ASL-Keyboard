@@ -13,7 +13,7 @@ import time
 from subprocess import call
 import numpy as np  # For numerical operations (e.g., minimum, maximum calculations)
 
-import handtrackingmodule as htm
+import HandTrackingModule as htm
 
 # Constants for hand landmarks and volume control
 INDEX_FINGER_IDX = 8  # Index for the tip of the index finger in MediaPipe hand tracking
@@ -22,6 +22,16 @@ VOLUME_UPDATE_INTERVAL = 15  # Adjust volume every 15 frames
 
 # Open the default camera (0 represents the default camera)
 videoCap = cv2.VideoCapture(0)
+
+face_classifier = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+
+def detect_bounding_box(vid):
+    gray_image = cv2.cvtColor(vid, cv2.COLOR_BGR2GRAY)
+    faces = face_classifier.detectMultiScale(
+        gray_image, 1.1, 5, minSize=(40, 40))
+    for (x, y, w, h) in faces:
+        cv2.rectangle(vid, (x, y), (x + w, y + h), (0, 255, 0), 4)
+    return faces
 
 # Variables for frame timing and distance calculations
 lastFrameTime = 0  # Time of the previous frame (used to calculate FPS)
@@ -33,8 +43,16 @@ min_diff = 100000  # Minimum distance between thumb and index finger (for volume
 handSolution = mp.solutions.hands
 hands = handSolution.Hands()
 
-detector = htm.HandDetector(detectionCon=0.7) 
+detector = htm.FindHands(detection_con=0.7) 
 numberOfFingers = 0
+
+# Function to check if a finger is up based on the y-coordinate of the tip and second joint
+def is_finger_up(finger_tip, finger_dip, img_height):
+    return finger_tip.y * img_height < finger_dip.y * img_height  # True if the tip is higher (up)
+
+# Function to check if the thumb is up (compares x-coordinates)
+def is_thumb_up(thumb_tip, thumb_cmc, img_width):
+    return thumb_tip.x * img_width > thumb_cmc.x * img_width  # True if the thumb tip is further to the right (up)
 
 # Main loop to capture and process frames
 while True:
@@ -59,6 +77,9 @@ while True:
         # Process the image to detect hands
         recHands = hands.process(imgRGB)
 
+        # Detect faces
+        faces = detect_bounding_box(img)
+
         # If hands are detected, process each detected hand
         if recHands.multi_hand_landmarks:
             for hand in recHands.multi_hand_landmarks:
@@ -70,8 +91,7 @@ while True:
 
                 fingers_up = []
 
-                # Check if the thumb is up (compare thumb tip (4) with thumb IP joint (3))
-                if is_finger_up(hand.landmark[4], hand.landmark[3], h):
+                if is_thumb_up(hand.landmark[4], hand.landmark[2], w):
                     fingers_up.append("Thumb")
                 if is_finger_up(hand.landmark[8], hand.landmark[7], h):
                     fingers_up.append("Index")
@@ -110,4 +130,9 @@ while True:
         cv2.imshow("CamOutput", img)
 
         # Wait 1 millisecond for a key press (allows for smooth video display)
-        cv2.waitKey(1)
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            break
+
+# Release resources
+videoCap.release()
+cv2.destroyAllWindows()
