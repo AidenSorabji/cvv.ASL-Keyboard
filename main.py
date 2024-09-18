@@ -1,138 +1,138 @@
-# -------------------- Imports --------------------  #
-# Mediapipe for hand tracking and other ML tasks
-import mediapipe as mp
-
-# OpenCV for video capture and image processing
 import cv2
-
-# Pynput for controlling keyboard (although it's not used here)
-from pynput.keyboard import Controller, Key
-
-# Utilities for time measurement and system commands
+import mediapipe as mp
 import time
-from subprocess import call
-import numpy as np  # For numerical operations (e.g., minimum, maximum calculations)
+import vkey  # Assuming you have a module for virtual keypresses
 
-import HandTrackingModule as htm
+# Initialize MediaPipe holistic model
+mp_holistic = mp.solutions.holistic
+mp_drawing = mp.solutions.drawing_utils
 
-# Constants for hand landmarks and volume control
-INDEX_FINGER_IDX = 8  # Index for the tip of the index finger in MediaPipe hand tracking
-THUMB_IDX = 4         # Index for the thumb tip in MediaPipe hand tracking
-VOLUME_UPDATE_INTERVAL = 15  # Adjust volume every 15 frames
-
-# Open the default camera (0 represents the default camera)
+# Initialize video capture
 videoCap = cv2.VideoCapture(0)
 
-face_classifier = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+# Initialize action timestamps
+last_volume_action_time = 0
+last_track_action_time = 0
+last_playpause_action_time = 0
+action_delay = 0.5  # Delay in seconds
 
-def detect_bounding_box(vid):
-    gray_image = cv2.cvtColor(vid, cv2.COLOR_BGR2GRAY)
-    faces = face_classifier.detectMultiScale(
-        gray_image, 1.1, 5, minSize=(40, 40))
-    for (x, y, w, h) in faces:
-        cv2.rectangle(vid, (x, y), (x + w, y + h), (0, 255, 0), 4)
-    return faces
+# Function to recognize basic gestures based on hand landmarks
+def recognize_gesture(hand_landmarks, img_width, img_height):
+    thumb_tip = hand_landmarks.landmark[mp_holistic.HandLandmark.THUMB_TIP]
+    thumb_mcp = hand_landmarks.landmark[mp_holistic.HandLandmark.THUMB_CMC]
+    index_tip = hand_landmarks.landmark[mp_holistic.HandLandmark.INDEX_FINGER_TIP]
+    index_mcp = hand_landmarks.landmark[mp_holistic.HandLandmark.INDEX_FINGER_MCP]
+    middle_tip = hand_landmarks.landmark[mp_holistic.HandLandmark.MIDDLE_FINGER_TIP]
+    middle_mcp = hand_landmarks.landmark[mp_holistic.HandLandmark.MIDDLE_FINGER_MCP]
+    ring_tip = hand_landmarks.landmark[mp_holistic.HandLandmark.RING_FINGER_TIP]
+    ring_mcp = hand_landmarks.landmark[mp_holistic.HandLandmark.RING_FINGER_MCP]
+    pinky_tip = hand_landmarks.landmark[mp_holistic.HandLandmark.PINKY_TIP]
+    pinky_mcp = hand_landmarks.landmark[mp_holistic.HandLandmark.PINKY_MCP]
 
-# Variables for frame timing and distance calculations
-lastFrameTime = 0  # Time of the previous frame (used to calculate FPS)
-frame = 0          # Frame counter
-max_diff = 0       # Maximum distance between thumb and index finger (for volume normalization)
-min_diff = 100000  # Minimum distance between thumb and index finger (for volume normalization)
+    # Convert to pixel coordinates
+    thumb_tip_x = int(thumb_tip.x * img_width)
+    thumb_tip_y = int(thumb_tip.y * img_height)
+    thumb_mcp_x = int(thumb_mcp.x * img_width)
+    thumb_mcp_y = int(thumb_mcp.y * img_height)    
+    index_tip_x = int(index_tip.x * img_width)
+    index_tip_y = int(index_tip.y * img_height)
+    middle_tip_y = int(middle_tip.y * img_height)
+    ring_tip_y = int(ring_tip.y * img_height)
+    pinky_tip_y = int(pinky_tip.y * img_height)
+    ring_mcp_y = int(ring_mcp.y * img_height)
+    pinky_mcp_y = int(pinky_mcp.y * img_height)
 
-# Setup MediaPipe hand tracking solution
-handSolution = mp.solutions.hands
-hands = handSolution.Hands()
+    # Thumbs Up: thumb is above its MCP joint and higher than the index finger
+    if thumb_tip_y < thumb_mcp_y and thumb_tip_y < index_tip_y:
+        return "thumb_up"
 
-detector = htm.FindHands(detection_con=0.7) 
-numberOfFingers = 0
+    # Thumbs Down: thumb is below its MCP joint and lower than the index finger
+    if thumb_tip_y > thumb_mcp_y and thumb_tip_y > index_tip_y:
+        return "thumb_down"
 
-# Function to check if a finger is up based on the y-coordinate of the tip and second joint
-def is_finger_up(finger_tip, finger_dip, img_height):
-    return finger_tip.y * img_height < finger_dip.y * img_height  # True if the tip is higher (up)
+    # Peace sign: Index and middle fingers up, ring and pinky down
+    if (index_tip_y < thumb_tip_y and middle_tip_y < thumb_tip_y and 
+        ring_tip_y > middle_tip_y and pinky_tip_y > ring_tip_y):
+        return "peace"
 
-# Function to check if the thumb is up (compares x-coordinates)
-def is_thumb_up(thumb_tip, thumb_cmc, img_width):
-    return thumb_tip.x * img_width > thumb_cmc.x * img_width  # True if the thumb tip is further to the right (up)
+    # OK sign: Thumb and index finger tips close to each other
+    if abs(thumb_tip.x - index_tip.x) < 20 and abs(thumb_tip.y - index_tip.y) < 20:
+        return "ok_sign"
 
-# Main loop to capture and process frames
-while True:
-    frame += 1  # Increment the frame counter
+    # Open palm: All fingers spread out
+    if (thumb_tip_y < thumb_mcp_y and
+        index_tip_y < middle_tip_y and 
+        middle_tip_y < ring_tip_y and ring_tip_y < pinky_tip_y):
+        return "open_palm"
 
-    # Capture a frame from the camera
-    success, img = videoCap.read()
+    return None
 
-    # If frame capture was successful, process the image
-    if success:
-        # Convert the image from BGR (OpenCV format) to RGB (required by MediaPipe)
-        imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+with mp_holistic.Holistic(min_detection_confidence=0.7, min_tracking_confidence=0.7) as holistic:
+    while videoCap.isOpened():
+        ret, frame = videoCap.read()
 
-        # Calculate FPS (frames per second)
-        thisFrameTime = time.time()  # Get the current time
-        fps = 1 / (thisFrameTime - lastFrameTime)  # FPS = 1 / time difference between frames
-        lastFrameTime = thisFrameTime  # Update the last frame time for the next iteration
-
-        # Overlay the FPS value on the image
-        cv2.putText(img, f'FPS:{int(fps)}', (20, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-
-        # Process the image to detect hands
-        recHands = hands.process(imgRGB)
-
-        # Detect faces
-        faces = detect_bounding_box(img)
-
-        # If hands are detected, process each detected hand
-        if recHands.multi_hand_landmarks:
-            for hand in recHands.multi_hand_landmarks:
-                # For each landmark in the hand, draw a circle on the image
-                for datapoint_id, point in enumerate(hand.landmark):
-                    h, w, c = img.shape  # Get the height, width, and channels of the image
-                    x, y = int(point.x * w), int(point.y * h)  # Convert normalized coordinates to pixel values
-                    cv2.circle(img, (x, y), 10, (255, 0, 255), cv2.FILLED)  # Draw a circle at each landmark point
-
-                fingers_up = []
-
-                if is_thumb_up(hand.landmark[4], hand.landmark[2], w):
-                    fingers_up.append("Thumb")
-                if is_finger_up(hand.landmark[8], hand.landmark[7], h):
-                    fingers_up.append("Index")
-                if is_finger_up(hand.landmark[12], hand.landmark[11], h):
-                    fingers_up.append("Middle")
-                if is_finger_up(hand.landmark[16], hand.landmark[15], h):
-                    fingers_up.append("Ring")
-                if is_finger_up(hand.landmark[20], hand.landmark[19], h):
-                    fingers_up.append("Pinky")
-                
-                # Print the number of fingers up and which ones in the terminal
-                print(f"Fingers up: {len(fingers_up)} -> {', '.join(fingers_up)}")
-
-            # Update volume every VOLUME_UPDATE_INTERVAL frames
-            if frame % VOLUME_UPDATE_INTERVAL == 0:
-                thumb_y = hand.landmark[THUMB_IDX].y  # Y-coordinate of the thumb tip
-                index_y = hand.landmark[INDEX_FINGER_IDX].y  # Y-coordinate of the index finger tip
-
-                # Calculate the distance between the thumb and index finger (in pixels)
-                distance = thumb_y * h - index_y * h
-
-                # Adjust min_diff and max_diff for calibration
-                min_diff = np.minimum(distance + 50, min_diff)  # Calibrate min distance with buffer
-                max_diff = np.maximum(distance, max_diff)  # Calibrate max distance
-
-                # Adjust the system volume on macOS based on the finger distance
-                # Volume is normalized between 0 and 100 using the distance between thumb and index finger
-                call(["osascript -e 'set volume output volume {}'"
-                      .format(np.clip(
-                          (distance / (max_diff - min_diff) * 100),  # Calculate the volume percentage
-                          0, 100))], shell=True)  # Clip the value between 0 and 100
-
-                frame = 0  # Reset the frame counter after updating volume
-
-        # Display the image in a window called "CamOutput"
-        cv2.imshow("CamOutput", img)
-
-        # Wait 1 millisecond for a key press (allows for smooth video display)
-        if cv2.waitKey(1) & 0xFF == ord("q"):
+        if not ret:
             break
 
-# Release resources
+        # Convert the frame to RGB (MediaPipe uses RGB)
+        imgRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+        # Process the frame to get landmarks
+        results = holistic.process(imgRGB)
+
+        # Extract the dimensions of the frame
+        img_height, img_width, _ = frame.shape
+
+        gesture_right = None
+        gesture_left = None
+
+        # Draw landmarks and recognize gestures for right hand
+        if results.right_hand_landmarks:
+            mp_drawing.draw_landmarks(frame, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+            gesture_right = recognize_gesture(results.right_hand_landmarks, img_width, img_height)
+
+            # Perform actions based on right hand gestures with delay
+            current_time = time.time()
+            if gesture_right == "thumb_up" and (current_time - last_volume_action_time) > action_delay:
+                last_volume_action_time = current_time
+                vkey.volume_up_press()
+            elif gesture_right == "thumb_down" and (current_time - last_volume_action_time) > action_delay:
+                last_volume_action_time = current_time
+                vkey.volume_down_press()
+
+        # Draw landmarks and recognize gestures for left hand
+        if results.left_hand_landmarks:
+            mp_drawing.draw_landmarks(frame, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+            gesture_left = recognize_gesture(results.left_hand_landmarks, img_width, img_height)
+
+            # Perform actions based on left hand gestures with delay
+            current_time = time.time()
+            if gesture_left == "thumb_up" and (current_time - last_track_action_time) > action_delay:
+                last_track_action_time = current_time
+                vkey.next_press()
+            elif gesture_left == "thumb_down" and (current_time - last_track_action_time) > action_delay:
+                last_track_action_time = current_time
+                vkey.previous_press()
+
+        # Detect two peace signs
+        if gesture_right == "peace" and gesture_left == "peace":
+            current_time = time.time()
+            if (current_time - last_playpause_action_time) > action_delay:
+                last_playpause_action_time = current_time
+                vkey.playpause_press()
+
+        # Display recognized gestures on the screen
+        if gesture_right:
+            cv2.putText(frame, f'Right Hand Gesture: {gesture_right}', (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        if gesture_left:
+            cv2.putText(frame, f'Left Hand Gesture: {gesture_left}', (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+        # Display the frame
+        cv2.imshow('Holistic Model', frame)
+
+        # Break the loop if 'q' is pressed
+        if cv2.waitKey(10) & 0xFF == ord('q'):
+            break
+
 videoCap.release()
 cv2.destroyAllWindows()
