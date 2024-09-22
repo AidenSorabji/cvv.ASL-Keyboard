@@ -63,7 +63,7 @@ pip install -r requirements.text
 python main.py
 ```
 > [!IMPORTANT]
-> If you get an error stating that it cannot find any module you installed, create a virtual environment, then install through there.
+> If you get an error stating that it cannot find any module you installed, create a virtual environment (preferably a .venv), then install through there.
 
 ## Copyright 
 MIT License
