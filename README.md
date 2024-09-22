@@ -1,5 +1,69 @@
 # cvv.Keyboard
-Using python modules to convert hand/head movements into simgulated keyboard presses in macOS.
+Using python modules to convert hand/head movements into simulate keyboard presses within macOS.
+
+## Table of Contents
+1. [Table of Contents](#table-of-contents)
+2. [Contributions](#Contributions)
+3. [Articles + Image References](#articles--image-references)
+
+      a. [Joint Tracking Guide](#joint-tracking-guide) 
+
+      b. [ASL Sign Guide](#asl-sign-guide)
+4. [Modules](#modules)
+5. [Installation](#installation)
+6. [Copyright](#copyright)
+
+## Contributions
+- [Aiden Sorabji](htttps://github.com/aidensorabji)
+- [AkramOM606](https://github.com/AkramOM606) ([American-Sign-Language-Detection](https://github.com/AkramOM606/American-Sign-Language-Detection/tree/main))
+
+## Articles + Image References
+- [How to build a Python-based hand tracking application! A beginners Guide](https://medium.com/@luca733/python-based-hand-tracking-application-c3bab8481146)
+- [Mediapipe: Fingers counting in Python w/o GPU](https://medium.com/analytics-vidhya/mediapipe-fingers-counting-in-python-w-o-gpu-f9494439090c)
+- [pynput Keyboard Bindings](https://pynput.readthedocs.io/en/latest/keyboard.html#pynput.keyboard.Key)
+
+### Joint Tracking Guide
+<p align="left">
+   <img src="https://raw.githubusercontent.com/AidenSorabji/cvv.Keyboard/refs/heads/main/images/joint-reference.webp" width="40%">
+</p>
+
+I found this really useful starting out with hand and finger detection when determining initially where each joint is by using this image. It helped me  without using an intelligent model classify different hand gestures formed by either the left or right hand. I did this basically by finding out each joints (x,y) coordinates in relation to the width and height of the webcam display area. By finding out where each of the joints are, I could use < or > signs in relation to other joints to semi-create my own gestures. 
+
+### ASL Sign Guide
+<p align="left">
+   <img src="https://github.com/AidenSorabji/cvv.Keyboard/blob/main/images/asl-reference.jpg?raw=true" width="40%">
+</p>
+
+Pretty helpful reference of ASL signs of the alphabet.
+
+## Modules
+- [OpenCV](https://pypi.org/project/opencv-python/)
+- [mediapipe](https://github.com/google/mediapipe)
+- [TenserFlow](https://www.tensorflow.org)
+- [Pillow](https://python-pillow.org)
+- [Numpy](https://numpy.org)
+- [Pandas](https://pandas.pydata.org)
+- [Seaborn](https://seaborn.pydata.org)
+- [Scikit-learn](https://scikit-learn.org/stable/)
+- [Matplotlib](https://matplotlib.org)
+- [pynput](https://pynput.readthedocs.io/en/latest/)
+
+## Installation
+1. Clone the repository
+```
+git clone https://github.com/aidensorabji/cvv.Keyboard
+cd cvv.Keyboard
+```
+2. Insure that you have the dependencies installed. If not, run the following command
+```
+pip install -r requirements.text
+```
+3. Run main python file
+```
+python main.py
+```
+> [!IMPORTANT]
+> If you get an error stating that it cannot find any module you installed, create a virtual environment, then install through there.
 
 ## Copyright 
 MIT License

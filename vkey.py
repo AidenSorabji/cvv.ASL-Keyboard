@@ -110,8 +110,6 @@ def y_release():
 def z_release():
     keyboard.release('z')
 
-
-
 def space_press():
     keyboard.press(' ')
 def enter_press():
@@ -119,7 +117,7 @@ def enter_press():
 """)
 def delete_press():
     keyboard.press(Key.delete)
-    kebyoard.release(Key.delete)
+    keyboard.release(Key.delete)
 def playpause_press():
     keyboard.press(Key.media_play_pause)
     keyboard.release(Key.media_play_pause)
