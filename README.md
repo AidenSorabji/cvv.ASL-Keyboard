@@ -1,6 +1,9 @@
 # cvv.Keyboard
 Using python modules to convert hand/head movements into simulate keyboard presses within macOS.
 
+> [!CAUTION]
+> Do not use this project nor upload it without crediting me first, along with [AkramOM606](https://github.com/AkramOM606).
+
 ## Table of Contents
 1. [Table of Contents](#table-of-contents)
 2. [Contributions](#Contributions)
@@ -28,6 +31,9 @@ Using python modules to convert hand/head movements into simulate keyboard press
 </p>
 
 I found this really useful starting out with hand and finger detection when determining initially where each joint is by using this image. It helped me  without using an intelligent model classify different hand gestures formed by either the left or right hand. I did this basically by finding out each joints (x,y) coordinates in relation to the width and height of the webcam display area. By finding out where each of the joints are, I could use < or > signs in relation to other joints to semi-create my own gestures. 
+
+> [!NOTE]  
+> For this specific project, a negated using this guide as I used a trained model from [AkramOM606](https://github.com/AkramOM606) to detect ASL inputs.
 
 ### ASL Sign Guide
 <p align="left">
