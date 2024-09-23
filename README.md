@@ -13,11 +13,11 @@ Big thanks to [AkramOM606](https://github.com/AkramOM606) for the bases of this 
 2. [Contributions](#Contributions)
 3. [Articles + Image References](#articles--image-references)
 
-      a. [Articles](#articles) 
+      a.  [Articles](#articles) 
 
-      b. [Joint Tracking Guide](#joint-tracking-guide)
+      b.  [Joint Tracking Guide](#joint-tracking-guide)
 
-      c. [ASL Sign Guide](#asl-sign-guide)
+      c.  [ASL Sign Guide](#asl-sign-guide)
 4. [Modules](#modules)
 5. [Installation](#installation)
 6. [Copyright](#copyright)
