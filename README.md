@@ -1,8 +1,10 @@
 # cvv.ASLkeyboard
 Using python modules to convert ASL hand movements into simulated keyboard presses within macOS.
 
+Big thanks to [AkramOM606](https://github.com/AkramOM606) for the bases of this repo, check out his repository on ASL-detection [Here](https://github.com/AkramOM606/American-Sign-Language-Detection/tree/main).
+
 > [!CAUTION]
-> Do not use this project nor upload it without crediting me first, along with [AkramOM606](https://github.com/AkramOM606).
+> Do not use this project nor upload it without crediting me along with [AkramOM606](https://github.com/AkramOM606).
 
 ## Table of Contents
 1. [Table of Contents](#table-of-contents)
@@ -17,7 +19,7 @@ Using python modules to convert ASL hand movements into simulated keyboard press
 6. [Copyright](#copyright)
 
 ## Contributions
-- [Aiden Sorabji](htttps://github.com/aidensorabji)
+- [Aiden Sorabji](https://github.com/aidensorabji)
 - [AkramOM606](https://github.com/AkramOM606) ([American-Sign-Language-Detection](https://github.com/AkramOM606/American-Sign-Language-Detection/tree/main))
 
 ## Articles + Image References
@@ -70,6 +72,8 @@ python main.py
 ```
 > [!IMPORTANT]
 > If you get an error stating: ```Module not found - "No module named"```, try creating a virtual environment (preferably a .venv), then installing the dependencies and re-running ```main.py```. 
+> [!NOTE]  
+> It's recommended to use a virtual environment with this repo to minimize module clashing errors.
 
 ## Copyright 
 MIT License
