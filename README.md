@@ -11,9 +11,11 @@ Big thanks to [AkramOM606](https://github.com/AkramOM606) for the bases of this 
 2. [Contributions](#Contributions)
 3. [Articles + Image References](#articles--image-references)
 
-      a. [Joint Tracking Guide](#joint-tracking-guide) 
+      a. [Articles](#articles) 
 
-      b. [ASL Sign Guide](#asl-sign-guide)
+      b. [Joint Tracking Guide](#joint-tracking-guide)
+
+      c. [ASL Sign Guide](#asl-sign-guide)
 4. [Modules](#modules)
 5. [Installation](#installation)
 6. [Copyright](#copyright)
@@ -23,6 +25,7 @@ Big thanks to [AkramOM606](https://github.com/AkramOM606) for the bases of this 
 - [AkramOM606](https://github.com/AkramOM606) ([American-Sign-Language-Detection](https://github.com/AkramOM606/American-Sign-Language-Detection/tree/main))
 
 ## Articles + Image References
+### Articles
 - [How to build a Python-based hand tracking application! A beginners Guide](https://medium.com/@luca733/python-based-hand-tracking-application-c3bab8481146)
 - [Mediapipe: Fingers counting in Python w/o GPU](https://medium.com/analytics-vidhya/mediapipe-fingers-counting-in-python-w-o-gpu-f9494439090c)
 - [pynput Keyboard Bindings](https://pynput.readthedocs.io/en/latest/keyboard.html#pynput.keyboard.Key)
