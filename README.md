@@ -34,7 +34,7 @@ Big thanks to [AkramOM606](https://github.com/AkramOM606) for the bases of this 
 
 ### Joint Tracking Guide
 <p align="left">
-   <img src="https://raw.githubusercontent.com/AidenSorabji/cvv.Keyboard/refs/heads/main/images/joint-reference.webp" width="40%">
+   <img src="https://raw.githubusercontent.com/AidenSorabji/cvv.ASL-Keyboard/refs/heads/main/images/joint-reference.webp" width="40%">
 </p>
 
 I found this really useful starting out with hand and finger detection when determining initially where each joint is by using this image. It helped me  without using an intelligent model classify different hand gestures formed by either the left or right hand. I did this basically by finding out each joints (x,y) coordinates in relation to the width and height of the webcam display area. By finding out where each of the joints are, I could use < or > signs in relation to other joints to semi-create my own gestures. 
@@ -44,7 +44,7 @@ I found this really useful starting out with hand and finger detection when dete
 
 ### ASL Sign Guide
 <p align="left">
-   <img src="https://github.com/AidenSorabji/cvv.Keyboard/blob/main/images/asl-reference.jpg?raw=true" width="40%">
+   <img src="https://github.com/AidenSorabji/cvv.ASL-Keyboard/blob/main/images/asl-reference.jpg?raw=true" width="40%">
 </p>
 
 Pretty helpful reference of ASL signs of the alphabet.
@@ -81,7 +81,7 @@ python main.py
 > If you get an error stating: ```Module not found - "No module named"```, try creating a virtual environment (preferably a ```.venv```), then installing the dependencies and re-running ```main.py```. 
 
 ## Copyright 
-MIT License
+MIT License 
 
 Copyright (c) 2024 Aiden Sorabji
 
