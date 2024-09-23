@@ -76,10 +76,10 @@ pip install -r requirements.text
 python main.py
 ```
 > [!IMPORTANT]
-> If you get an error stating: ```Module not found - "No module named"```, try creating a virtual environment (preferably a .venv), then installing the dependencies and re-running ```main.py```. 
+> If you get an error stating: ```Module not found - "No module named"```, try creating a virtual environment (preferably a ```.venv```), then installing the dependencies and re-running ```main.py```. 
 
 > [!NOTE]  
-> It's recommended to use a virtual environment with this repo to minimize module clashing errors.
+> It's recommended to use a virtual environment (```.venv```) when running this repo to minimize module clashing errors.
 
 ## Copyright 
 MIT License
