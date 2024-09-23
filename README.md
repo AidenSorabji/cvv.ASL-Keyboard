@@ -5,6 +5,8 @@ Big thanks to [AkramOM606](https://github.com/AkramOM606) for the bases of this 
 
 > [!CAUTION]
 > Do not use this project nor upload it without crediting me along with [AkramOM606](https://github.com/AkramOM606).
+>
+> Also this project isn't completely working right now, the vision is but not the keyboard inputs. Please do not follow installation process as of right now.
 
 ## Table of Contents
 1. [Table of Contents](#table-of-contents)
