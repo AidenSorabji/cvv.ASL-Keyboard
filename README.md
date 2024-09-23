@@ -1,5 +1,5 @@
-# cvv.Keyboard
-Using python modules to convert hand/head movements into simulate keyboard presses within macOS.
+# cvv.ASLkeyboard
+Using python modules to convert ASL hand movements into simulated keyboard presses within macOS.
 
 > [!CAUTION]
 > Do not use this project nor upload it without crediting me first, along with [AkramOM606](https://github.com/AkramOM606).
@@ -69,7 +69,7 @@ pip install -r requirements.text
 python main.py
 ```
 > [!IMPORTANT]
-> If you get an error stating that it cannot find any module you installed, create a virtual environment (preferably a .venv), then install through there.
+> If you get an error stating: ```Module not found - "No module named"```, try creating a virtual environment (preferably a .venv), then installing the dependencies and re-running ```main.py```. 
 
 ## Copyright 
 MIT License
