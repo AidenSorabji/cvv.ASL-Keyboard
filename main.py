@@ -6,6 +6,9 @@ import cv2 as cv
 import numpy as np
 import mediapipe as mp
 import itertools
+import time
+import threading
+import vkey  # Assuming this is the virtual keyboard module
 
 from utils.cvfpscalc import CvFpsCalc
 from model.keypoint_classifier.keypoint_classifier import KeyPointClassifier
@@ -38,7 +41,7 @@ def get_args():
 
 
 def main():
-    # Argument parsing #################################################################
+    # Argument parsing
     args = get_args()
 
     cap_device = args.device
@@ -51,12 +54,12 @@ def main():
 
     use_brect = True
 
-    # Camera preparation ###############################################################
+    # Camera preparation
     cap = cv.VideoCapture(cap_device)
     cap.set(cv.CAP_PROP_FRAME_WIDTH, cap_width)
     cap.set(cv.CAP_PROP_FRAME_HEIGHT, cap_height)
 
-    # Model load #############################################################
+    # Model load
     mp_hands = mp.solutions.hands
     hands = mp_hands.Hands(
         static_image_mode=use_static_image_mode,
@@ -67,41 +70,40 @@ def main():
 
     keypoint_classifier = KeyPointClassifier()
 
-    # Read labels ###########################################################
+    # Read labels
     with open(
         "model/keypoint_classifier/keypoint_classifier_label.csv", encoding="utf-8-sig"
     ) as f:
         keypoint_classifier_labels = csv.reader(f)
         keypoint_classifier_labels = [row[0] for row in keypoint_classifier_labels]
 
-    # FPS Measurement ########################################################
+    # FPS Measurement
     cvFpsCalc = CvFpsCalc(buffer_len=10)
 
-    #  ########################################################################
     mode = 0
 
     while True:
         fps = cvFpsCalc.get()
 
-        # Process Key (ESC: end) #################################################
+        # Process Key (ESC: end)
         key = cv.waitKey(10)
         if key == 27:  # ESC
             break
         number, mode = select_mode(key, mode)
 
-        # Camera capture #####################################################
+        # Camera capture
         ret, image = cap.read()
         if not ret:
             break
         image = cv.flip(image, 1)  # Mirror display
         debug_image = copy.deepcopy(image)
 
-        # Detection implementation #############################################################
+        # Detection implementation
         image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
-
         image.flags.writeable = False
         results = hands.process(image)
         image.flags.writeable = True
+
 
         if results.multi_hand_landmarks is not None:
             for hand_landmarks, handedness in zip(
@@ -117,6 +119,10 @@ def main():
 
                 # Hand sign classification
                 hand_sign_id = keypoint_classifier(pre_processed_landmark_list)
+                detected_letter = keypoint_classifier_labels[hand_sign_id]
+
+                # Trigger virtual keypress using vkey
+                trigger_vkey(detected_letter)
 
                 # Drawing part
                 debug_image = draw_bounding_rect(use_brect, debug_image, brect)
@@ -125,18 +131,92 @@ def main():
                     debug_image,
                     brect,
                     handedness,
-                    keypoint_classifier_labels[hand_sign_id],
+                    detected_letter,
                 )
 
         debug_image = draw_info(debug_image, fps, mode, number)
 
-        # Screen reflection #############################################################
+        # Screen reflection
         cv.imshow("Hand Gesture Recognition", debug_image)
 
     cap.release()
     cv.destroyAllWindows()
+# Global variables to track the last detected letter, last pressed letter, and the last press time
+last_detected_letter = None
+last_pressed_letter = None
+last_press_time = 0
+wait_time = 0.5  # wait time in seconds
 
+def trigger_vkey(detected_letter):
+    global last_detected_letter, last_pressed_letter, last_press_time
 
+    current_time = time.time()  # Get the current time
+
+    # If a new letter is detected
+    if detected_letter != last_detected_letter:
+        # Check if enough time has passed since the last key press
+        if detected_letter != last_pressed_letter and (current_time - last_press_time) >= wait_time:
+            # Perform the key press
+            if detected_letter == 'A':
+                vkey.a_press()
+            elif detected_letter == 'B':
+                vkey.b_press()
+            elif detected_letter == 'C':
+                vkey.c_press()
+            elif detected_letter == 'D':
+                vkey.d_press()
+            elif detected_letter == 'E':
+                vkey.e_press()
+            elif detected_letter == 'F':
+                vkey.f_press()
+            elif detected_letter == 'G':
+                vkey.g_press()
+            elif detected_letter == 'H':
+                vkey.h_press()
+            elif detected_letter == 'I':
+                vkey.i_press()
+            elif detected_letter == 'J':
+                vkey.j_press()
+            elif detected_letter == 'K':
+                vkey.k_press()
+            elif detected_letter == 'L':
+                vkey.l_press()
+            elif detected_letter == 'M':
+                vkey.m_press()
+            elif detected_letter == 'N':
+                vkey.n_press()
+            elif detected_letter == 'O':
+                vkey.o_press()
+            elif detected_letter == 'P':
+                vkey.p_press()
+            elif detected_letter == 'Q':
+                vkey.q_press()
+            elif detected_letter == 'R':
+                vkey.r_press()
+            elif detected_letter == 'S':
+                vkey.s_press()
+            elif detected_letter == 'T':
+                vkey.t_press()
+            elif detected_letter == 'U':
+                vkey.u_press()
+            elif detected_letter == 'V':
+                vkey.v_press()
+            elif detected_letter == 'W':
+                vkey.w_press()
+            elif detected_letter == 'X':
+                vkey.x_press()
+            elif detected_letter == 'Y':
+                vkey.y_press()
+            elif detected_letter == 'Z':
+                vkey.z_press()
+
+            # Update the last pressed letter and the last press time
+            last_pressed_letter = detected_letter
+            last_press_time = current_time  # Update the last press time
+
+    # Update the last detected letter
+    last_detected_letter = detected_letter
+    
 def select_mode(key, mode):
     number = -1
     if 65 <= key <= 90:  # A ~ B
@@ -205,7 +285,6 @@ def pre_process_landmark(landmark_list):
     temp_landmark_list = list(map(normalize_, temp_landmark_list))
 
     return temp_landmark_list
-
 
 def draw_landmarks(image, landmark_point):
     if len(landmark_point) > 0:
