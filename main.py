@@ -1,3 +1,6 @@
+# H on left hand - delete
+# L on left hand - space
+
 import os
 import csv
 import copy
@@ -141,6 +144,7 @@ def main():
 
     cap.release()
     cv.destroyAllWindows()
+
 # Global variables to track the last detected letter, last pressed letter, and the last press time
 last_detected_letter = None
 last_pressed_letter = None
