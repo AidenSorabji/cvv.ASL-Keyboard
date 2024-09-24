@@ -85,6 +85,8 @@ def main():
 
     mode = 0
 
+    global last_detected_letter, last_pressed_letter
+
     while True:
         fps = cvFpsCalc.get()
 
@@ -106,7 +108,6 @@ def main():
         image.flags.writeable = False
         results = hands.process(image)
         image.flags.writeable = True
-
 
         if results.multi_hand_landmarks is not None:
             for hand_landmarks, handedness in zip(
@@ -136,6 +137,10 @@ def main():
                     handedness,
                     detected_letter,
                 )
+        else:
+            # Reset when the hand goes out of frame
+            last_detected_letter = None
+            last_pressed_letter = None
 
         debug_image = draw_info(debug_image, fps, mode, number)
 
@@ -144,7 +149,7 @@ def main():
 
     cap.release()
     cv.destroyAllWindows()
-
+#
 # Global variables to track the last detected letter, last pressed letter, and the last press time
 last_detected_letter = None
 last_pressed_letter = None
