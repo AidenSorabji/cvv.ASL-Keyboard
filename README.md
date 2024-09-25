@@ -1,4 +1,11 @@
 # cvv.ASL-Keyboard
+<a href="https://github.com/AidenSorabji/cvv.ASL-Keyboard" title="Go to GitHub repo"><img src="https://img.shields.io/static/v1?label=AidenSorabji&message=cvv.ASL-Keyboard&color=blue&logo=github" alt="AidenSorabji - cvv.ASL-Keyboard"></a>
+<a href="https://python.org" title="Go to Python homepage"><img src="https://img.shields.io/badge/Python-%3E=3.12.4-blue?logo=python&logoColor=white" alt="Made with Python"></a>
+<a href="https://www.apple.com/macos/" title="Go to Apple homepage"><img src="https://img.shields.io/badge/OS-macOS-blue?logo=apple&logoColor=white" alt="OS - macOS"></a>
+<a href="#license"><img src="https://img.shields.io/badge/License-MIT-blue" alt="License"></a>
+<img alt="GitHub followers" src="https://img.shields.io/github/followers/aidensorabji">
+<img alt="GitHub followers" src="https://img.shields.io/github/watchers/aidensorabji/cvv.ASL-Keyboard">
+
 Utilizing machine learning python modules to convert ASL hand movements into simulated keyboard presses within macOS.
 
 Big thanks to [AkramOM606](https://github.com/AkramOM606) for the bases of this repo, check out his repository on ASL-detection [Here](https://github.com/AkramOM606/American-Sign-Language-Detection/tree/main).
@@ -32,6 +39,7 @@ Big thanks to [AkramOM606](https://github.com/AkramOM606) for the bases of this 
 
 ### Joint Tracking Guide
 <p align="left">
+   <a href="https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker" target="_blank"></a>
    <img src="https://raw.githubusercontent.com/AidenSorabji/cvv.ASL-Keyboard/refs/heads/main/images/joint-reference.webp" width="40%">
 </p>
 
@@ -42,6 +50,7 @@ I found this really useful starting out with hand and finger detection when dete
 
 ### ASL Sign Guide
 <p align="left">
+   <a href="https://twitter.com/afcs_seaf/status/1441115154247155712" target="_blank"></a>
    <img src="https://github.com/AidenSorabji/cvv.ASL-Keyboard/blob/main/images/asl-reference.jpg?raw=true" width="40%">
 </p>
 

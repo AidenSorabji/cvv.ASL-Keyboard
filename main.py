@@ -1,5 +1,8 @@
 # H on left hand - delete
 # L on left hand - space
+# u/v on left hand - period
+# w on left hand - exclamation mark
+# x om left hand - question mark
 
 import os
 import csv
