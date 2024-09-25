@@ -6,7 +6,7 @@
 <img alt="GitHub followers" src="https://img.shields.io/github/followers/aidensorabji">
 <img alt="GitHub followers" src="https://img.shields.io/github/watchers/aidensorabji/cvv.ASL-Keyboard">
 
-Utilizing machine learning python modules to convert ASL hand movements into simulated keyboard presses within macOS.
+Utilizing machine learning within python to convert ASL hand movements into simulated keyboard presses within macOS.
 
 Big thanks to [AkramOM606](https://github.com/AkramOM606) for the bases of this repo, check out his repository on ASL-detection [Here](https://github.com/AkramOM606/American-Sign-Language-Detection/tree/main).
 
