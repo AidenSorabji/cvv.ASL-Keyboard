@@ -59,7 +59,7 @@ I found this really useful starting out with hand and finger detection when dete
    <img src="https://github.com/AidenSorabji/cvv.ASL-Keyboard/blob/main/images/asl-reference.jpg?raw=true" width="40%">
 </p>
 
-Pretty helpful reference of ASL signs of the alphabet.
+Pretty helpful reference of ASL signs within the ASL alphabet.
 
 ## Modules
 - [OpenCV](https://pypi.org/project/opencv-python/)
