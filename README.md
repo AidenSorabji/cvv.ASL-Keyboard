@@ -24,8 +24,13 @@ Big thanks to [AkramOM606](https://github.com/AkramOM606) for the bases of this 
 
       c.  [ASL Sign Guide](#asl-sign-guide)
 4. [Modules](#modules)
-5. [Installation](#installation)
-6. [Copyright](#copyright)
+5. [Controls](#controls)
+
+      a.  [Left Hand](#left-hand)
+
+      b.  [Right Hand](#right-hand)
+6. [Installation](#installation)
+7. [Copyright](#copyright)
 
 ## Contributions
 - [Aiden Sorabji](https://github.com/aidensorabji)
@@ -67,6 +72,19 @@ Pretty helpful reference of ASL signs of the alphabet.
 - [Scikit-learn](https://scikit-learn.org/stable/)
 - [Matplotlib](https://matplotlib.org)
 - [pynput](https://pynput.readthedocs.io/en/latest/)
+
+## Controls
+### Left Hand
+| Control              | Sign |
+| :---------------- | :------: |
+| Delete        |   H/C   |
+| Space           |   L   |
+| Exclamation Mark    |  W   |
+| Question Mark |  X   |
+| Period |  v/u   |
+
+### Right Hand
+Use the [ASL Sign Guide](#asl-sign-guide).
 
 ## Installation
 > [!NOTE]  
