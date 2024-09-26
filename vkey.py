@@ -86,12 +86,25 @@ def z_press():
 
 def space_press():
     keyboard.press(' ')
+    keyboard.release(' ')
 def enter_press():
     keyboard.press("""
 """)
+    keyboard.release("""
+""")
+def period_press():
+    keyboard.press('.')
+    keyboard.release('.')
+def exclamation_press():
+    keyboard.press('!')
+    keyboard.release('!')
+def question_press():
+    keyboard.press('?')
+    keyboard.release('?')
+
+
 def delete_press():
-    keyboard.press(Key.delete)
-    keyboard.release(Key.delete)
+    keyboard.press(Key.backspace)
 def playpause_press():
     keyboard.press(Key.media_play_pause)
     keyboard.release(Key.media_play_pause)

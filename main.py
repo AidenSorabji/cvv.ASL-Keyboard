@@ -1,9 +1,3 @@
-# H on left hand - delete
-# L on left hand - space
-# u/v on left hand - period
-# w on left hand - exclamation mark
-# x om left hand - question mark
-
 import os
 import csv
 import copy
@@ -128,8 +122,11 @@ def main():
                 hand_sign_id = keypoint_classifier(pre_processed_landmark_list)
                 detected_letter = keypoint_classifier_labels[hand_sign_id]
 
-                # Trigger virtual keypress using vkey
-                trigger_vkey(detected_letter)
+                # Determine the handedness ('Left' or 'Right')
+                hand_label = handedness.classification[0].label
+
+                # Trigger virtual keypress using vkey based on hand label
+                trigger_vkey(detected_letter, hand_label)
 
                 # Drawing part
                 debug_image = draw_bounding_rect(use_brect, debug_image, brect)
@@ -159,72 +156,99 @@ last_pressed_letter = None
 last_press_time = 0
 wait_time = 0.5  # wait time in seconds
 
-def trigger_vkey(detected_letter):
+# Modify the trigger_vkey function to handle both hands based on handedness
+def trigger_vkey(detected_letter, hand_label):
     global last_detected_letter, last_pressed_letter, last_press_time
 
     current_time = time.time()  # Get the current time
 
-    # If a new letter is detected
-    if detected_letter != last_detected_letter:
-        # Check if enough time has passed since the last key press
-        if detected_letter != last_pressed_letter and (current_time - last_press_time) >= wait_time:
-            # Perform the key press
-            if detected_letter == 'A':
-                vkey.a_press()
-            elif detected_letter == 'B':
-                vkey.b_press()
-            elif detected_letter == 'C':
-                vkey.c_press()
-            elif detected_letter == 'D':
-                vkey.d_press()
-            elif detected_letter == 'E':
-                vkey.e_press()
-            elif detected_letter == 'F':
-                vkey.f_press()
-            elif detected_letter == 'G':
-                vkey.g_press()
-            elif detected_letter == 'H':
-                vkey.h_press()
-            elif detected_letter == 'I':
-                vkey.i_press()
-            elif detected_letter == 'J':
-                vkey.j_press()
-            elif detected_letter == 'K':
-                vkey.k_press()
-            elif detected_letter == 'L':
-                vkey.l_press()
-            elif detected_letter == 'M':
-                vkey.m_press()
-            elif detected_letter == 'N':
-                vkey.n_press()
-            elif detected_letter == 'O':
-                vkey.o_press()
-            elif detected_letter == 'P':
-                vkey.p_press()
-            elif detected_letter == 'Q':
-                vkey.q_press()
-            elif detected_letter == 'R':
-                vkey.r_press()
-            elif detected_letter == 'S':
-                vkey.s_press()
-            elif detected_letter == 'T':
-                vkey.t_press()
-            elif detected_letter == 'U':
-                vkey.u_press()
-            elif detected_letter == 'V':
-                vkey.v_press()
-            elif detected_letter == 'W':
-                vkey.w_press()
-            elif detected_letter == 'X':
-                vkey.x_press()
-            elif detected_letter == 'Y':
-                vkey.y_press()
-            elif detected_letter == 'Z':
-                vkey.z_press()
+    # Check if the hand is the left hand and perform left-hand specific actions
+    if hand_label == 'Left':
+        # If a new letter is detected
+        if detected_letter != last_detected_letter:
+            # Check if enough time has passed since the last key press
+            if detected_letter != last_pressed_letter and (current_time - last_press_time) >= wait_time:
+                # Perform the key press based on the detected letter
+                if detected_letter == 'C':
+                    vkey.delete_press()
+                elif detected_letter == 'L':
+                    vkey.space_press()
+                elif detected_letter in ['U', 'V']:
+                    vkey.period_press()
+                elif detected_letter == 'W':
+                    vkey.exclamation_press()
+                elif detected_letter == 'X':
+                    vkey.question_press()
+                elif detected_letter == 'H':
+                    vkey.delete_press()
 
-            # Update the last pressed letter and the last press time
-            last_pressed_letter = detected_letter
-            last_press_time = current_time  # Update the last press time
+                # Update the last pressed letter and the last press time
+                last_pressed_letter = detected_letter
+                last_press_time = current_time  # Update the last press time
+
+    # Check if the hand is the right hand and perform right-hand specific actions
+    elif hand_label == 'Right':
+        # If a new letter is detected
+        if detected_letter != last_detected_letter:
+            # Check if enough time has passed since the last key press
+            if detected_letter != last_pressed_letter and (current_time - last_press_time) >= wait_time:
+                # Perform the key press
+                if detected_letter == 'A':
+                    vkey.a_press()
+                elif detected_letter == 'B':
+                    vkey.b_press()
+                elif detected_letter == 'C':
+                    vkey.c_press()
+                elif detected_letter == 'D':
+                    vkey.d_press()
+                elif detected_letter == 'E':
+                    vkey.e_press()
+                elif detected_letter == 'F':
+                    vkey.f_press()
+                elif detected_letter == 'G':
+                    vkey.g_press()
+                elif detected_letter == 'H':
+                    vkey.h_press()
+                elif detected_letter == 'I':
+                    vkey.i_press()
+                elif detected_letter == 'J':
+                    vkey.j_press()
+                elif detected_letter == 'K':
+                    vkey.k_press()
+                elif detected_letter == 'L':
+                    vkey.l_press()
+                elif detected_letter == 'M':
+                    vkey.m_press()
+                elif detected_letter == 'N':
+                    vkey.n_press()
+                elif detected_letter == 'O':
+                    vkey.o_press()
+                elif detected_letter == 'P':
+                    vkey.p_press()
+                elif detected_letter == 'Q':
+                    vkey.q_press()
+                elif detected_letter == 'R':
+                    vkey.r_press()
+                elif detected_letter == 'S':
+                    vkey.s_press()
+                elif detected_letter == 'T':
+                    vkey.t_press()
+                elif detected_letter == 'U':
+                    vkey.u_press()
+                elif detected_letter == 'V':
+                    vkey.v_press()
+                elif detected_letter == 'W':
+                    vkey.w_press()
+                elif detected_letter == 'X':
+                    vkey.x_press()
+                elif detected_letter == 'Y':
+                    vkey.y_press()
+                elif detected_letter == 'Z':
+                    vkey.z_press()
+
+                # Update the last pressed letter and the last press time
+                last_pressed_letter = detected_letter
+                last_press_time = current_time  # Update the last press time
 
     # Update the last detected letter
     last_detected_letter = detected_letter
