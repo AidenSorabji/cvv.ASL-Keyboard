@@ -8,8 +8,7 @@ import mediapipe as mp
 import itertools
 import time
 import threading
-import vkey  # Assuming this is the virtual keyboard module
-
+import vkey 
 from utils.cvfpscalc import CvFpsCalc
 from model.keypoint_classifier.keypoint_classifier import KeyPointClassifier
 
@@ -252,6 +251,7 @@ def trigger_vkey(detected_letter, hand_label):
 
     # Update the last detected letter
     last_detected_letter = detected_letter
+ 
     
 def select_mode(key, mode):
     number = -1
