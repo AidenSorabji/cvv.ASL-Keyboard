@@ -87,8 +87,8 @@ Pretty helpful reference of ASL signs within the ASL alphabet.
 Use the [ASL Sign Guide](#asl-sign-guide).
 
 ## Installation
-> [!NOTE]  
-> It's recommended to use a virtual environment (```.venv```) when running this repo to minimize module clashing errors. It is also recommended to use a IDE with git support (ex. VSCode)
+> [!IMPORTANT]  
+> It's recommended to use a virtual environment (```.venv```) when running this repo to minimize module clashing errors. It is also recommended to use a IDE with git support (ex. VSCode). It's recommended to use python version ```3.12.4```, although higher versions may work.
 1. Clone the repository
 ```
 git clone https://github.com/aidensorabji/cvv.Keyboard
@@ -102,8 +102,6 @@ pip install -r requirements.text
 ```
 python main.py
 ```
-> [!IMPORTANT]
-> If you get an error stating: ```Module not found - "No module named"```, try creating a virtual environment (preferably a ```.venv```), then installing the dependencies and re-running ```main.py```. 
 
 ## Copyright 
 MIT License 
