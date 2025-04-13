@@ -94,7 +94,7 @@ Use the [ASL Sign Guide](#asl-sign-guide).
 git clone https://github.com/aidensorabji/cvv.Keyboard
 cd cvv.Keyboard
 ```
-2. Insure that you have the dependencies installed. If not, run the following command
+2. Ensure that you have the dependencies installed. If not, run the following command
 ```
 pip install -r requirements.text
 ```
